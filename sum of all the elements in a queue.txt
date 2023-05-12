@@ -1,0 +1,90 @@
+//sum of all the elements in a queue
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node
+{
+    int data;
+    struct Node* next;
+};
+
+struct Queue
+{
+    struct Node* front;
+    struct Node* rear;
+};
+
+void initializeQueue(struct Queue* q)
+{
+    q->front=NULL;
+    q->rear=NULL;
+}
+
+int isEmpty(struct Queue* q)
+{
+    return (q->front==NULL);
+}
+
+void enqueue(struct Queue* q,int data)
+{
+    struct Node* newNode=(struct Node*)malloc(sizeof(struct Node));
+    newNode->data=data;
+    newNode->next=NULL;
+    
+    if (isEmpty(q))
+    {
+        q->front=newNode;
+        q->rear=newNode;
+    }
+    else
+    {
+        q->rear->next=newNode;
+        q->rear=newNode;
+    }
+}
+
+int dequeue(struct Queue* q)
+{
+    if (isEmpty(q))
+    {
+        printf("Queue is empty.\n");
+        return -1;
+    }
+    
+    struct Node* temp=q->front;
+    int data=temp->data;
+    q->front=q->front->next;
+    if (q->front==NULL)
+        q->rear=NULL;
+    free(temp);
+    return data;
+}
+
+int getSumOfQueue(struct Queue* q)
+{
+    int sum = 0;
+    struct Node* current=q->front;
+    while(current!=NULL)
+    {
+        sum+=current->data;
+        current=current->next;
+    }
+    return sum;
+}
+
+int main()
+{
+    struct Queue q;
+    initializeQueue(&q);
+    int n,val;
+    scanf("%d",&n);
+    while(n--)
+    {
+        scanf("%d",&val);
+        enqueue(&q,val);
+    }
+    int sum=getSumOfQueue(&q);
+    printf("%d\n",sum);
+    return 0;
+}
